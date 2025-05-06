@@ -56,13 +56,15 @@
        "description": "Spell is cast a second time after a small delay; increased mana cost and cooldown.",
        "delay": "0.5",
        "mana_multiplier": "1.5",
-       "cooldown_multiplier": "1.5"
+       "cooldown_multiplier": "1.5",
+       "double_projectile": true,
    },
    "splitter": {
        "name": "split",
        "description": "Spell is cast twice in slightly different directions; increased mana cost.",
        "angle": "10",
-       "mana_multiplier": "1.5"
+       "mana_multiplier": "1.5",
+       "split_projectile": true,
    },
    "chaos": {
        "name": "chaotic",

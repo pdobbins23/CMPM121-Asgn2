@@ -42,13 +42,11 @@ public class SpellCaster
     }
 
     public SpellContext GetContext()
-{
-    return new SpellContext
     {
-        Power = this.spell_power,
-        Wave = GameManager.Instance.CurrentWave // or however you track waves
-    };
-}
-
-
+        return new SpellContext
+        {
+            Power = this.spell_power,
+            Wave = GameManager.Instance.currentWave // or however you track waves
+        };
+    }
 }

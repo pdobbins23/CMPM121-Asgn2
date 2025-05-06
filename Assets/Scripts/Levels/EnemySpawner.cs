@@ -105,8 +105,8 @@ public class EnemySpawner : MonoBehaviour
         GameManager.Instance.totalEnemiesForWave = 0;
 
         foreach (var spawn in currentLevel.spawns) {
-            var vars = new Dictionary<string, int> {
-                { "wave", GameManager.Instance.currentWave },
+            var vars = new Dictionary<string, float> {
+                { "wave", (float)GameManager.Instance.currentWave },
             };
             
             int totalCount = RPN.EvalInt(spawn.count, vars);

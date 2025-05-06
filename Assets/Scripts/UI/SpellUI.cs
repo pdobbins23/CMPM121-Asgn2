@@ -37,7 +37,7 @@ public class SpellUI : MonoBehaviour
             last_text_update = Time.time;
         }
         
-        float since_last = Time.time - spell.last_cast;
+        float since_last = Time.time - spell.lastCast;
         float perc;
         if (since_last > spell.GetCooldown())
         {
