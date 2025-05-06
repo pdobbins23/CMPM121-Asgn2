@@ -68,7 +68,7 @@ public class SpellBuilder
     private Spell CreateModifierSpell(SpellCaster owner, string key, Spell inner)
     {
         JObject modObj = SpellManager.Instance.AllSpells[key];
-        return new ModifierSpell(owner, inner, modObj);  // you'll customize this
+        return new ModifierSpell(owner, inner, modObj);  
     }
 }
 
