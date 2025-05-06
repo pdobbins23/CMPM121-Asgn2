@@ -15,7 +15,7 @@ public class SpellBuilder
     {
         foreach (var pair in SpellManager.Instance.AllSpells)
         {
-            if (pair.Value.ContainsKey("damage"))  // crude but effective split
+            if (pair.Value.ContainsKey("damage")) 
                 baseSpellKeys.Add(pair.Key);
             else
                 modifierSpellKeys.Add(pair.Key);
@@ -59,6 +59,8 @@ public class SpellBuilder
                 return new ArcaneBlastSpell(owner, spellObj);
             case "arcane_spray":
                 return new ArcaneSpraySpell(owner, spellObj);
+            case "knockback_blash":
+                return new KnockbackBlash(owner, spellObj);
             default:
                 Debug.LogWarning("Unknown base spell key: " + key);
                 return new ArcaneBoltSpell(owner, spellObj);

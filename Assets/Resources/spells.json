@@ -103,9 +103,6 @@
         "cooldown_multiplier": "0.5",
         "damage_multiplier": "0.8",
         "mana_multiplier": "1.1"
-}
-
-
-   
+    } 
 
 }
