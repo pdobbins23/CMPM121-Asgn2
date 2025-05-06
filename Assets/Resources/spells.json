@@ -40,6 +40,16 @@
        "cooldown": "0.5",
        "projectile": {"trajectory": "straight", "speed": "8", "sprite": 0, "lifetime": "0.1 power 100 / +"}
    },
+   "knockback_blast": {
+        "name": "Knockback Blast",
+        "description": "Hits enemies with strong force.",
+        "icon": 4,
+        "damage": { "amount": "30 power 2 * +", "type": "arcane" },
+        "mana_cost": "25 power 1 +",
+        "cooldown": "2.0",
+        "projectile": {"trajectory": "straight", "speed": "14", "sprite": 2, "lifetime": "0.25"}
+    },
+
    "damage_amp": {
        "name": "damage-amplified",
        "description": "Increased damage and increased mana cost.",
@@ -57,14 +67,14 @@
        "delay": "0.5",
        "mana_multiplier": "1.5",
        "cooldown_multiplier": "1.5",
-       "double_projectile": true,
+       "double_projectile": true
    },
    "splitter": {
        "name": "split",
        "description": "Spell is cast twice in slightly different directions; increased mana cost.",
        "angle": "10",
        "mana_multiplier": "1.5",
-       "split_projectile": true,
+       "split_projectile": true
    },
    "chaos": {
        "name": "chaotic",
@@ -78,6 +88,24 @@
        "damage_multiplier": "0.75",
        "mana_adder": "10",
        "projectile_trajectory": "homing"
-   }
+   },
+   "chaos_amplifier": {
+        "name": "chaos",
+        "description": "Greatly increases damage and speed, but costs more mana.",
+        "damage_multiplier": "2.0",
+        "speed_multiplier": "1.5",
+        "mana_multiplier": "1.75",
+        "projectile_trajectory": "spiraling"
+    },
+    "rapid_fire": {
+        "name": "rapid fire",
+        "description": "Halves cooldown but slightly weakens spell.",
+        "cooldown_multiplier": "0.5",
+        "damage_multiplier": "0.8",
+        "mana_multiplier": "1.1"
+}
+
+
+   
 
 }
