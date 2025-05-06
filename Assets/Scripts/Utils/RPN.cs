@@ -1,59 +1,43 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class RPN {
-    public static int eval(string exp, Dictionary<string, int> vars){
-        Stack<int> nums = new Stack<int>();
+    public static int EvalInt(string exp, Dictionary<string, float> vars)
+    {
+        return Mathf.RoundToInt(EvalFloat(exp, vars));
+    }
+
+    public static float EvalFloat(string exp, Dictionary<string, float> vars)
+    {
+        Stack<float> nums = new Stack<float>();
         string[] tokens = exp.Split(' ');
-        foreach (var token in tokens) {
-            bool success = int.TryParse(token, out int num);
-            if (success){
+        foreach (var token in tokens)
+        {
+            if (float.TryParse(token, out float num))
+            {
                 nums.Push(num);
             }
-            else{
-                if (vars.ContainsKey(token)) {
-                    nums.Push(vars[token]);
-
-                }
-                else{
-                    switch(token){
-                        case "+": {
-                            int a = nums.Pop();
-                            int b = nums.Pop();
-                            nums.Push(b + a);
-                            break;
-                        }
-                        case "-": {
-                            int a = nums.Pop();
-                            int b = nums.Pop();
-                            nums.Push(b - a);
-                            break;
-                        }
-                        case "*": {
-                            int a = nums.Pop();
-                            int b = nums.Pop();
-                            nums.Push(b * a);
-                            break;
-                        }
-                        case "/": {
-                            int a = nums.Pop();
-                            int b = nums.Pop();
-                            nums.Push(b / a);
-                            break;
-                        }
-                        case "%": {
-                            int a = nums.Pop();
-                            int b = nums.Pop();
-                            nums.Push(b % a);
-                            break;
-                        }
-                        default:
-                            Debug.Log("RPN Parse Error");
-                            return 0;
-                    }
+            else if (vars.ContainsKey(token))
+            {
+                nums.Push(vars[token]);
+            }
+            else
+            {
+                float b = nums.Pop();
+                float a = nums.Pop();
+                switch (token)
+                {
+                    case "+": nums.Push(a + b); break;
+                    case "-": nums.Push(a - b); break;
+                    case "*": nums.Push(a * b); break;
+                    case "/": nums.Push(a / b); break;
+                    case "%": nums.Push(a % b); break;
+                    default:
+                        Debug.Log("RPN Parse Error: " + token);
+                        return 0;
                 }
             }
-
         }
 
         return nums.Pop();
