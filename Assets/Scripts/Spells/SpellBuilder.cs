@@ -24,7 +24,7 @@ public class SpellBuilder
 
     public BaseSpell Build(SpellCaster owner)
 {
-    string key = ...; // random base spell
+    string key = ""; // random base spell
     JObject json = SpellManager.Instance.AllSpells[key];
     return new ArcaneBoltSpell(owner, json);
 }

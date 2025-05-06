@@ -15,10 +15,10 @@ public class ArcaneBoltSpell : Spell
     public ArcaneBoltSpell(SpellCaster owner, JObject data) : base(owner)
     {
         var ctx = owner.GetContext().ToDictionary();
-        damage = (int)RPN.Evaluate(data["damage"]["amount"].ToString(), ctx);
-        manaCost = (int)RPN.Evaluate(data["mana_cost"].ToString(), ctx);
+        damage = (int)RPN.eval(data["damage"]["amount"].ToString(), ctx);
+        manaCost = (int)RPN.eval(data["mana_cost"].ToString(), ctx);
         cooldown = float.Parse(data["cooldown"].ToString());
-        speed = RPN.Evaluate(data["projectile"]["speed"].ToString(), ctx);
+        speed = RPN.eval(data["projectile"]["speed"].ToString(), ctx);
         icon = data["icon"]?.ToObject<int>() ?? 0;
     }
 

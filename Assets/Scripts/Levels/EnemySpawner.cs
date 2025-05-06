@@ -109,7 +109,7 @@ public class EnemySpawner : MonoBehaviour
                 { "wave", GameManager.Instance.currentWave },
             };
             
-            int totalCount = RPN.eval(spawn.count, vars);
+            int totalCount = RPN.EvalInt(spawn.count, vars);
 
             GameManager.Instance.totalEnemiesForWave += totalCount;
 
@@ -156,7 +156,7 @@ public class EnemySpawner : MonoBehaviour
         };
 
         EnemyController en = new_enemy.GetComponent<EnemyController>();
-        en.hp = new Hittable(RPN.eval(s.hp, hpVars), Hittable.Team.MONSTERS, new_enemy);
+        en.hp = new Hittable(RPN.EvalInt(s.hp, hpVars), Hittable.Team.MONSTERS, new_enemy);
         en.speed = e.speed;
 
         GameManager.Instance.AddEnemy(new_enemy);

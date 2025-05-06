@@ -5,10 +5,10 @@ using System;
 public class RPN {
     public static int EvalInt(string exp, Dictionary<string, float> vars)
     {
-        return Mathf.RoundToInt(EvalFloat(exp, vars));
+        return Mathf.RoundToInt(eval(exp, vars));
     }
 
-    public static float EvalFloat(string exp, Dictionary<string, float> vars)
+    public static float eval(string exp, Dictionary<string, float> vars)
     {
         Stack<float> nums = new Stack<float>();
         string[] tokens = exp.Split(' ');

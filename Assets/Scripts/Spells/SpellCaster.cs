@@ -8,6 +8,8 @@ public class SpellCaster
     public int max_mana;
     public int mana_reg;
     public Hittable.Team team;
+
+    public float spell_power = 10f;
     public Spell spell;
 
     public IEnumerator ManaRegeneration()
@@ -38,5 +40,15 @@ public class SpellCaster
         }
         yield break;
     }
+
+    public SpellContext GetContext()
+{
+    return new SpellContext
+    {
+        Power = this.spell_power,
+        Wave = GameManager.Instance.CurrentWave // or however you track waves
+    };
+}
+
 
 }

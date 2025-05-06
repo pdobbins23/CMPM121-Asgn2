@@ -1,3 +1,10 @@
+using UnityEngine;
+using System.Collections;
+using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
+
+
+
 public class SpellContext
 {
     public float Power;
