@@ -68,3 +68,5 @@ public class SpellBuilder
         return new ModifierSpell(owner, inner, modObj);  // you'll customize this
     }
 }
+
+
