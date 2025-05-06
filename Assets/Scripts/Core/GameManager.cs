@@ -57,6 +57,13 @@ public class GameManager
         return enemies.Aggregate((a,b) => (a.transform.position - point).sqrMagnitude < (b.transform.position - point).sqrMagnitude ? a : b);
     }
 
+    void OnWaveCompleted()
+{
+    Spell newSpell = new SpellBuilder().Build(GameManager.Instance.player);
+    SpellRewardUI.Instance.Show(newSpell, GameManager.Instance.player);
+}
+
+
     private GameManager()
     {
         enemies = new List<GameObject>();
