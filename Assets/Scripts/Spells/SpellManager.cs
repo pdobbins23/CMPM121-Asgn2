@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 public class SpellManager
 {
-    public Dictionary<string, JObject> AllSpells = new Dictionary<string, JObject>();
+    public Dictionary<string, RawSpell> AllSpells = new Dictionary<string, RawSpell>();
 
     private static SpellManager theInstance;
     public static SpellManager Instance
@@ -25,7 +25,9 @@ public class SpellManager
 
         foreach (var spell in jo.Children<JProperty>())
         {
-            AllSpells[spell.Name] = (JObject)spell.Value;
+            JObject obj = (JObject)spell.Value;
+            
+            AllSpells[spell.Name] = obj.ToObject<RawSpell>();
         }
     }
 }

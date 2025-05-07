@@ -8,70 +8,33 @@ using System.Collections.Generic;
 public class SpellBuilder
 {
     private System.Random random = new System.Random();
-    private List<string> baseSpellKeys = new List<string>();
-    private List<string> modifierSpellKeys = new List<string>();
+    
+    private List<RawSpell> baseSpells = new List<RawSpell>();
+    private List<RawSpell> modifierSpells = new List<RawSpell>();
 
     public SpellBuilder()
     {
-        foreach (var pair in SpellManager.Instance.AllSpells)
+        foreach (var spell in SpellManager.Instance.AllSpells.Values)
         {
-            if (pair.Value.ContainsKey("damage")) 
-                baseSpellKeys.Add(pair.Key);
+            if (spell.Modifier == true)
+                modifierSpells.Add(spell);
             else
-                modifierSpellKeys.Add(pair.Key);
+                baseSpells.Add(spell);
         }
     }
 
-    public Spell Build(SpellCaster owner)
+    public Spell GetRandomSpell(SpellCaster owner)
     {
-        string key = ""; // random base spell
-        JObject json = SpellManager.Instance.AllSpells[key];
-        return new ArcaneBoltSpell(owner, json);
-    }
-
-
-    private Spell CreateRandomSpell(SpellCaster owner)
-    {
-        string baseKey = baseSpellKeys[random.Next(baseSpellKeys.Count)];
-        Spell baseSpell = CreateBaseSpell(owner, baseKey);
+        RawSpell spell = baseSpells[random.Next(baseSpells.Count)];
 
         int numModifiers = random.Next(0, 3);
         for (int i = 0; i < numModifiers; i++)
         {
-            string modKey = modifierSpellKeys[random.Next(modifierSpellKeys.Count)];
-            baseSpell = CreateModifierSpell(owner, modKey, baseSpell);
+            RawSpell modifierSpell = modifierSpells[random.Next(modifierSpells.Count)];
+
+            spell = spell.WithModifierSpell(modifierSpell);
         }
-
-        return baseSpell;
-    }
-
-    private Spell CreateBaseSpell(SpellCaster owner, string key)
-    {
-        JObject spellObj = SpellManager.Instance.AllSpells[key];
-
-        switch (key)
-        {
-            case "arcane_bolt":
-                return new ArcaneBoltSpell(owner, spellObj);
-            case "magic_missile":
-                return new MagicMissileSpell(owner, spellObj);
-            case "arcane_blast":
-                return new ArcaneBlastSpell(owner, spellObj);
-            case "arcane_spray":
-                return new ArcaneSpraySpell(owner, spellObj);
-            case "knockback_blash":
-                return new KnockbackBlash(owner, spellObj);
-            default:
-                Debug.LogWarning("Unknown base spell key: " + key);
-                return new ArcaneBoltSpell(owner, spellObj);
-        }
-    }
-
-    private Spell CreateModifierSpell(SpellCaster owner, string key, Spell inner)
-    {
-        JObject modObj = SpellManager.Instance.AllSpells[key];
-        return new ModifierSpell(owner, inner, modObj);  
+        
+        return new Spell(spell, owner);
     }
 }
-
-

@@ -23,6 +23,7 @@ public class SpellUI : MonoBehaviour
     public void SetSpell(Spell spell)
     {
         this.spell = spell;
+        
         GameManager.Instance.spellIconManager.PlaceSprite(spell.GetIcon(), icon.GetComponent<Image>());
     }
 
@@ -38,15 +39,17 @@ public class SpellUI : MonoBehaviour
         }
         
         float since_last = Time.time - spell.lastCast;
+        
         float perc;
-        if (since_last > spell.GetCooldown())
+        if (since_last > spell.GetCoolDown())
         {
             perc = 0;
         }
         else
         {
-            perc = 1-since_last / spell.GetCooldown();
+            perc = 1-since_last / spell.GetCoolDown();
         }
+        
         cooldown.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 48 * perc);
     }
 }

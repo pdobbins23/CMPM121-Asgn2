@@ -29,11 +29,11 @@ public class SpellRewardUI : MonoBehaviour
         player = caster;
 
         spellNameText.text = rewardSpell.GetName();
-        spellDescText.text = $"Mana: {rewardSpell.GetManaCost(caster.GetContext())}\n" +
-                             $"Damage: {rewardSpell.GetDamage(caster.GetContext())}\n" +
-                             $"Cooldown: {rewardSpell.GetCooldown(caster.GetContext())}";
+        spellDescText.text = $"Mana: {rewardSpell.GetManaCost()}\n" +
+                             $"Damage: {rewardSpell.GetDamage()}\n" +
+                             $"Cooldown: {rewardSpell.GetCoolDown()}";
 
-        GameManager.Instance.spellIconManager.PlaceSprite(rewardSpell.GetIcon(), iconImage);
+        GameManager.Instance.spellIconManager.PlaceSprite(rewardSpell.Icon, iconImage);
 
         panel.SetActive(true);
     }

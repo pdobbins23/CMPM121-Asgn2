@@ -28,6 +28,9 @@ public class PlayerController : MonoBehaviour
     public void StartLevel()
     {
         spellcaster = new SpellCaster(125, 8, Hittable.Team.PLAYER);
+        Spell startingSpell = new Spell(SpellManager.Instance.AllSpells["arcane_bolt"], spellcaster);
+        spellcaster.spell = startingSpell;
+        
         StartCoroutine(spellcaster.ManaRegeneration());
         
         hp = new Hittable(100, Hittable.Team.PLAYER, gameObject);
