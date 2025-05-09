@@ -20,8 +20,24 @@ public class Spell
         return Time.time > lastCast + RPN.eval(rawSpell.CoolDown, owner.GetContext().ToDictionary());
     }
 
+    public float LastCast() => lastCast;
+
     public string GetName() => rawSpell.Name;
     public int GetIcon() => rawSpell.Icon;
+
+    public float GetDelay()
+    {
+        var ctx = owner.GetContext().ToDictionary();
+
+        return RPN.eval(rawSpell.Delay ?? "0", ctx);
+    }
+
+    public float GetAngle()
+    {
+        var ctx = owner.GetContext().ToDictionary();
+
+        return RPN.eval(rawSpell.Angle ?? "0", ctx);
+    }
 
     public int GetManaCost()
     {
@@ -71,11 +87,42 @@ public class Spell
     {
         var ctx = owner.GetContext().ToDictionary();
 
-        float speed = RPN.eval(rawSpell.SecondaryProjectile.Speed ?? "0", ctx);
+        float speed = RPN.eval(rawSpell.SecondaryProjectile?.Speed ?? "0", ctx);
         float speedAdder = RPN.eval(rawSpell.SpeedAdder ?? "0", ctx);
         float speedMultiplier = RPN.eval(rawSpell.SpeedMultiplier ?? "1", ctx);
 
         return (speed + speedAdder) * speedMultiplier;
+    }
+
+    private void FireProjectiles(Vector3 where, Vector3 dir)
+    {
+        // fire base projectile
+
+        string baseTrajectory = rawSpell.ProjectileTrajectory ?? rawSpell.BaseProjectile?.Trajectory;
+        float baseSpeed = GetBaseProjectileSpeed();
+        
+        GameManager.Instance.projectileManager.CreateProjectile(
+            rawSpell.Icon, baseTrajectory, where, dir, baseSpeed, OnHit);
+
+        // fire secondary projectile if it exists
+
+        string secondaryTrajectory = rawSpell.ProjectileTrajectory ?? rawSpell.SecondaryProjectile?.Trajectory;
+        float secondarySpeed = GetSecondaryProjectileSpeed();
+        
+        GameManager.Instance.projectileManager.CreateProjectile(
+            rawSpell.Icon, secondaryTrajectory, where, dir, secondarySpeed, OnHit);
+    }
+
+    private IEnumerator FireProjectilesWithDouble(Vector3 where, Vector3 dir)
+    {
+        FireProjectiles(where, dir);
+
+        if (rawSpell.DoubleProjectile == true)
+        {
+            yield return new WaitForSeconds(GetDelay());
+
+            FireProjectiles(where, dir);
+        }
     }
 
     public IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team team)
@@ -83,36 +130,23 @@ public class Spell
         lastCast = Time.time;
         var ctx = owner.GetContext().ToDictionary();
 
-        Vector3 direction = (target - where).normalized;
+        Vector3 dir = (target - where).normalized;
 
-        string trajectory = rawSpell.ProjectileTrajectory ?? rawSpell.Projectile.Trajectory;
-        float speed = GetProjectileSpeed();
-
-        if (rawSpell.DoubleProjectile)
+        if (rawSpell.SplitProjectile == true)
         {
-            GameManager.Instance.projectileManager.CreateProjectile(
-                rawSpell.Icon, trajectory, where, direction, speed, OnHit);
-
-            yield return new WaitForSeconds(rawSpell.Delay);
-
-            GameManager.Instance.projectileManager.CreateProjectile(
-                rawSpell.Icon, trajectory, where, direction, speed, OnHit);
-        }
-        else if (rawSpell.SplitProjectile)
-        {
-            float angleOffset = mods.angle;
+            float angleOffset = GetAngle();
             Quaternion rotation1 = Quaternion.Euler(0, 0, angleOffset);
             Quaternion rotation2 = Quaternion.Euler(0, 0, -angleOffset);
 
-            Vector3 dir1 = rotation1 * direction;
-            Vector3 dir2 = rotation2 * direction;
+            Vector3 dir1 = rotation1 * dir;
+            Vector3 dir2 = rotation2 * dir;
 
-            GameManager.Instance.projectileManager.CreateProjectile(icon, trajectory, where, dir1, speed, OnHit);
-            GameManager.Instance.projectileManager.CreateProjectile(icon, trajectory, where, dir2, speed, OnHit);
+            yield return FireProjectilesWithDouble(where, dir1);
+            yield return FireProjectilesWithDouble(where, dir2);
         }
         else
         {
-            GameManager.Instance.projectileManager.CreateProjectile(icon, trajectory, where, direction, speed, OnHit);
+            yield return FireProjectilesWithDouble(where, dir);
         }
 
         yield return null;
@@ -122,7 +156,7 @@ public class Spell
     {
         if (other.team != owner.team)
         {
-            other.Damage(new Damage(Mathf.RoundToInt(GetDamage()), Damage.TypeFromString(rawSpell.Damage.Type)));
+            other.Damage(new Damage(Mathf.RoundToInt(GetDamage()), Damage.TypeFromString(rawSpell.BaseDamage?.Type)));
         }
     }
 }

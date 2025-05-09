@@ -33,7 +33,7 @@ public class SpellRewardUI : MonoBehaviour
                              $"Damage: {rewardSpell.GetDamage()}\n" +
                              $"Cooldown: {rewardSpell.GetCoolDown()}";
 
-        GameManager.Instance.spellIconManager.PlaceSprite(rewardSpell.Icon, iconImage);
+        GameManager.Instance.spellIconManager.PlaceSprite(rewardSpell.GetIcon(), iconImage);
 
         panel.SetActive(true);
     }

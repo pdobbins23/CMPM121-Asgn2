@@ -150,7 +150,7 @@ public class EnemySpawner : MonoBehaviour
 
         new_enemy.GetComponent<SpriteRenderer>().sprite = GameManager.Instance.enemySpriteManager.Get(e.sprite);
 
-        var hpVars = new Dictionary<string, int> {
+        var hpVars = new Dictionary<string, float> {
             { "base", e.hp },
             { "wave", wave },
         };

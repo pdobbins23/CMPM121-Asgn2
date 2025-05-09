@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
         // tell UI elements what to show
         healthui.SetHealth(hp);
         manaui.SetSpellCaster(spellcaster);
-        spellui.SetSpell(spellcaster.spell);
+        spellui.SetSpell(spellcaster.spells[0]);
     }
 
     // Update is called once per frame
@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour
         Vector2 mouseScreen = Mouse.current.position.value;
         Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(mouseScreen);
         mouseWorld.z = 0;
-        StartCoroutine(spellcaster.Cast(transform.position, mouseWorld));
+        StartCoroutine(spellcaster.Cast(0, transform.position, mouseWorld));
     }
 
     void OnMove(InputValue value)

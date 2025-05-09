@@ -77,7 +77,6 @@
     <Compile Include="Assets/Scripts/Projectiles/HomingProjectileMovement.cs" />
     <Compile Include="Assets/Scripts/Spells/SpellBuilder.cs" />
     <Compile Include="Assets/Scripts/UI/RelicUIManager.cs" />
-    <Compile Include="Assets/Scripts/Spells/ModifierSpell.cs" />
     <Compile Include="Assets/Scripts/SpriteManagement/IconManager.cs" />
     <Compile Include="Assets/Scripts/Spells/SpellCaster.cs" />
     <Compile Include="Assets/Scripts/SpriteManagement/RelicIconManager.cs" />
@@ -106,6 +105,7 @@
     <Compile Include="Assets/Scripts/Core/PlayerController.cs" />
     <Compile Include="Assets/Scripts/Levels/LevelManager.cs" />
     <Compile Include="Assets/Scripts/Levels/EnemySpawner.cs" />
+    <Compile Include="Assets/Scripts/Spells/RawSpell.cs" />
     <Compile Include="Assets/Scripts/UI/WaveLabelController.cs" />
     <Compile Include="Assets/Scripts/Core/GameManager.cs" />
     <Compile Include="Assets/Scripts/Projectiles/SpiralingProjectileMovement.cs" />

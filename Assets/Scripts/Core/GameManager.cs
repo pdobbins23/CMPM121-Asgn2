@@ -59,8 +59,10 @@ public class GameManager
 
     void OnWaveCompleted()
     {
-        Spell newSpell = new SpellBuilder().GetRandomSpell(GameManager.Instance.player);
-        SpellRewardUI.Instance.Show(newSpell, GameManager.Instance.player);
+        PlayerController pc = GameManager.Instance.player.GetComponent<PlayerController>();
+        
+        Spell newSpell = new SpellBuilder().GetRandomSpell(pc.spellcaster);
+        SpellRewardUI.Instance.Show(newSpell, pc.spellcaster);
     }
 
 
