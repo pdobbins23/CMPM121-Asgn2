@@ -11,16 +11,23 @@ public class SpellRewardUI : MonoBehaviour
     public TextMeshProUGUI spellDescText;
     public Image iconImage;
 
-    public Button[] replaceButtons;
+    public GameObject[] dropButtons = new GameObject[4];
     public Button declineButton;
+    public Button acceptButton;
 
-    private Spell rewardSpell;
+    public Spell rewardSpell;
     private SpellCaster player;
+    public PlayerController playerObj;
+
+    public SpellRewardUI()
+    {
+        Instance = this;
+    }
 
     void Awake()
     {
         Instance = this;
-        panel.SetActive(false);
+        // panel.SetActive(false);
     }
 
     public void Show(Spell newSpell, SpellCaster caster)
@@ -35,22 +42,14 @@ public class SpellRewardUI : MonoBehaviour
 
         GameManager.Instance.spellIconManager.PlaceSprite(rewardSpell.GetIcon(), iconImage);
 
+        if (player.spells.Count > 3)
+        {
+            foreach (var btn in dropButtons)
+            {
+                btn.SetActive(true);
+            }
+        }
+
         panel.SetActive(true);
-    }
-
-    public void ReplaceSpell(int index)
-    {
-        player.spells[index] = rewardSpell;
-        Close();
-    }
-
-    public void Decline()
-    {
-        Close();
-    }
-
-    private void Close()
-    {
-        panel.SetActive(false);
     }
 }

@@ -85,6 +85,14 @@ public class EnemySpawner : MonoBehaviour
 
     public void NextWave()
     {
+        var pc = GameManager.Instance.player.GetComponent<PlayerController>();
+
+        pc.hp.hp = pc.hp.max_hp = 95 + GameManager.Instance.currentWave * 5;
+        pc.spellcaster.mana = 90 + GameManager.Instance.currentWave * 10;
+        pc.spellcaster.mana_reg = GameManager.Instance.currentWave + 10;
+        pc.spellcaster.spell_power = GameManager.Instance.currentWave * 10;
+        pc.speed = 5;
+        
         StartCoroutine(SpawnWave());
     }
 
@@ -138,6 +146,11 @@ public class EnemySpawner : MonoBehaviour
         GameManager.Instance.state = GameManager.GameState.ENDINGWAVE;
         
         continueBtn.gameObject.SetActive(true);
+        
+        PlayerController pc = GameManager.Instance.player.GetComponent<PlayerController>();
+        
+        Spell newSpell = new SpellBuilder().GetRandomSpell(pc.spellcaster);
+        SpellRewardUI.Instance.Show(newSpell, pc.spellcaster);
     }
 
     IEnumerator SpawnEnemy(int wave, Enemy e, Level.Spawn s)

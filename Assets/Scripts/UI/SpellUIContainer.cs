@@ -9,10 +9,10 @@ public class SpellUIContainer : MonoBehaviour
     void Start()
     {
         // we only have one spell (right now)
-        spellUIs[0].SetActive(true);
+        // spellUIs[0].SetActive(true);
         for(int i = 1; i< spellUIs.Length; ++i)
         {
-            spellUIs[i].SetActive(false);
+            // spellUIs[i].SetActive(false);
         }
     }
 

@@ -69,11 +69,13 @@
     <Compile Include="Assets/Scripts/UI/DamageNumbers.cs" />
     <Compile Include="Assets/Scripts/Internal/SpriteViewer.cs" />
     <Compile Include="Assets/Scripts/Projectiles/StraightProjectileMovement.cs" />
+    <Compile Include="Assets/Scripts/Spells/DropSpellButton.cs" />
     <Compile Include="Assets/Scripts/DamageSystem/Hittable.cs" />
     <Compile Include="Assets/Scripts/Internal/SpriteView.cs" />
     <Compile Include="Assets/Scripts/UI/ManaBar.cs" />
     <Compile Include="Assets/Scripts/UI/RewardScreenManager.cs" />
     <Compile Include="Assets/Scripts/UI/RelicUI.cs" />
+    <Compile Include="Assets/Scripts/Spells/AcceptRewardButton.cs" />
     <Compile Include="Assets/Scripts/Projectiles/HomingProjectileMovement.cs" />
     <Compile Include="Assets/Scripts/Spells/SpellBuilder.cs" />
     <Compile Include="Assets/Scripts/UI/RelicUIManager.cs" />
@@ -100,6 +102,7 @@
     <Compile Include="Assets/Scripts/Enemies/Enemy.cs" />
     <Compile Include="Assets/Scripts/SpriteManagement/PlayerSpriteManager.cs" />
     <Compile Include="Assets/Scripts/Spells/SpellManager.cs" />
+    <Compile Include="Assets/Scripts/Spells/SkipRewardButton.cs" />
     <Compile Include="Assets/Scripts/Spells/SpellContext.cs" />
     <Compile Include="Assets/Scripts/Core/EventBus.cs" />
     <Compile Include="Assets/Scripts/Core/PlayerController.cs" />
