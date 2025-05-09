@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     public GameObject[] dropButtons = new GameObject[4];
 
     public int speed;
+    public int currentSpell = 0;
 
     public Unit unit;
 
@@ -45,15 +46,15 @@ public class PlayerController : MonoBehaviour
         spellui[0].GetComponent<SpellUI>().SetSpell(spellcaster.spells[0]);
 
         // test
-        Spell spell2 = new Spell(SpellManager.Instance.AllSpells["arcane_blast"], spellcaster);
-        Spell spell3 = new Spell(SpellManager.Instance.AllSpells["magic_missile"], spellcaster);
-        Spell spell4 = new Spell(SpellManager.Instance.AllSpells["arcane_spray"], spellcaster);
-        spellcaster.spells.Add(spell2);
-        spellcaster.spells.Add(spell3);
-        spellcaster.spells.Add(spell4);
-        spellui[1].GetComponent<SpellUI>().SetSpell(spellcaster.spells[1]);
-        spellui[2].GetComponent<SpellUI>().SetSpell(spellcaster.spells[2]);
-        spellui[3].GetComponent<SpellUI>().SetSpell(spellcaster.spells[3]);
+        // Spell spell2 = new Spell(SpellManager.Instance.AllSpells["arcane_blast"], spellcaster);
+        // Spell spell3 = new Spell(SpellManager.Instance.AllSpells["magic_missile"], spellcaster);
+        // Spell spell4 = new Spell(SpellManager.Instance.AllSpells["arcane_spray"], spellcaster);
+        // spellcaster.spells.Add(spell2);
+        // spellcaster.spells.Add(spell3);
+        // spellcaster.spells.Add(spell4);
+        // spellui[1].GetComponent<SpellUI>().SetSpell(spellcaster.spells[1]);
+        // spellui[2].GetComponent<SpellUI>().SetSpell(spellcaster.spells[2]);
+        // spellui[3].GetComponent<SpellUI>().SetSpell(spellcaster.spells[3]);
     }
 
     // Update is called once per frame
@@ -85,7 +86,7 @@ public class PlayerController : MonoBehaviour
         Vector2 mouseScreen = Mouse.current.position.value;
         Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(mouseScreen);
         mouseWorld.z = 0;
-        StartCoroutine(spellcaster.Cast(0, transform.position, mouseWorld));
+        StartCoroutine(spellcaster.Cast(currentSpell, transform.position, mouseWorld));
     }
 
     void OnMove(InputValue value)

@@ -115,6 +115,7 @@
     <Compile Include="Assets/Scripts/UI/AnimateDamage.cs" />
     <Compile Include="Assets/Scripts/UI/SpellUIContainer.cs" />
     <Compile Include="Assets/Scripts/Movement/Unit.cs" />
+    <Compile Include="Assets/Scripts/Spells/SelectSpellButton.cs" />
     <Compile Include="Assets/Scripts/Spells/ProjectileManager.cs" />
   </ItemGroup>
   <ItemGroup>
