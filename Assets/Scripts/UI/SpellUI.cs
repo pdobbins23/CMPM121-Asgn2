@@ -34,7 +34,7 @@ public class SpellUI : MonoBehaviour
         if (Time.time > last_text_update + UPDATE_DELAY)
         {
             manacost.text = spell.GetManaCost().ToString();
-            damage.text = spell.GetDamage().ToString();
+            damage.text = spell.GetBaseDamage().ToString();
             last_text_update = Time.time;
         }
         

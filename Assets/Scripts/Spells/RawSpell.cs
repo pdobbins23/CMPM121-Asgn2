@@ -40,6 +40,8 @@ public struct RawSpell
     public int Icon { get; set; }
     [JsonProperty("N")]
     public string? Count { get; set; }
+    [JsonProperty("spray")]
+    public string? Spray { get; set; }
     [JsonProperty("projectile")]
     public Projectile? BaseProjectile { get; set; }
     [JsonProperty("secondary_projectile")]

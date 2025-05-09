@@ -18,7 +18,6 @@ public class PlayerController : MonoBehaviour
 
     public Unit unit;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         unit = GetComponent<Unit>();
@@ -29,7 +28,7 @@ public class PlayerController : MonoBehaviour
     {
         spellcaster = new SpellCaster(125, 8, Hittable.Team.PLAYER);
         
-        Spell startingSpell = new Spell(SpellManager.Instance.AllSpells["arcane_bolt"], spellcaster);
+        Spell startingSpell = new Spell(SpellManager.Instance.AllSpells["arcane_spray"], spellcaster);
         
         spellcaster.spells.Add(startingSpell);
         

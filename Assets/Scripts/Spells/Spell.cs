@@ -39,6 +39,34 @@ public class Spell
         return RPN.eval(rawSpell.Angle ?? "0", ctx);
     }
 
+    public int GetCount()
+    {
+        var ctx = owner.GetContext().ToDictionary();
+
+        return RPN.EvalInt(rawSpell.Count ?? "1", ctx);
+    }
+
+    public float GetSpray()
+    {
+        var ctx = owner.GetContext().ToDictionary();
+
+        return RPN.eval(rawSpell.Spray ?? "0", ctx);
+    }
+
+    public float GetBaseLifeTime()
+    {
+        var ctx = owner.GetContext().ToDictionary();
+
+        return RPN.eval(rawSpell.BaseProjectile?.LifeTime ?? "100", ctx);
+    }
+
+    public float GetSecondaryLifeTime()
+    {
+        var ctx = owner.GetContext().ToDictionary();
+
+        return RPN.eval(rawSpell.SecondaryProjectile?.LifeTime ?? "100", ctx);
+    }
+
     public int GetManaCost()
     {
         var ctx = owner.GetContext().ToDictionary();
@@ -50,7 +78,7 @@ public class Spell
         return Mathf.RoundToInt((manaCost + manaAdder) * manaMultiplier);
     }
 
-    public float GetDamage()
+    public float GetBaseDamage()
     {
         var ctx = owner.GetContext().ToDictionary();
 
@@ -59,6 +87,13 @@ public class Spell
         float damageMultiplier= RPN.eval(rawSpell.DamageMultiplier ?? "1", ctx);
 
         return (damage + damageAdder) * damageMultiplier;
+    }
+
+    public float GetSecondaryDamage()
+    {
+        var ctx = owner.GetContext().ToDictionary();
+
+        return RPN.eval(rawSpell.SecondaryDamage ?? "0", ctx);
     }
 
     public float GetCoolDown()
@@ -94,35 +129,53 @@ public class Spell
         return (speed + speedAdder) * speedMultiplier;
     }
 
-    private void FireProjectiles(Vector3 where, Vector3 dir)
+    private void FireProjectile(Vector3 where, Vector3 dir)
     {
-        // fire base projectile
-
         string baseTrajectory = rawSpell.ProjectileTrajectory ?? rawSpell.BaseProjectile?.Trajectory;
-        float baseSpeed = GetBaseProjectileSpeed();
         
         GameManager.Instance.projectileManager.CreateProjectile(
-            rawSpell.Icon, baseTrajectory, where, dir, baseSpeed, OnHit);
-
-        // fire secondary projectile if it exists
-
-        string secondaryTrajectory = rawSpell.ProjectileTrajectory ?? rawSpell.SecondaryProjectile?.Trajectory;
-        float secondarySpeed = GetSecondaryProjectileSpeed();
-        
-        GameManager.Instance.projectileManager.CreateProjectile(
-            rawSpell.Icon, secondaryTrajectory, where, dir, secondarySpeed, OnHit);
+            rawSpell.Icon, baseTrajectory, where, dir, GetBaseProjectileSpeed(), OnHit, GetBaseLifeTime());
     }
 
-    private IEnumerator FireProjectilesWithDouble(Vector3 where, Vector3 dir)
+    private void FireBaseProjectiles(Vector3 where, Vector3 dir)
     {
-        FireProjectiles(where, dir);
+        int count = GetCount();
+        float spray = GetSpray();
 
-        if (rawSpell.DoubleProjectile == true)
+        var rnd = new System.Random();
+        
+        for (int i = 0; i < count; i++)
         {
-            yield return new WaitForSeconds(GetDelay());
+            Vector3 finalDir = dir;
 
-            FireProjectiles(where, dir);
+            if (spray != 0.0)
+            {
+                Quaternion rot = Quaternion.Euler(0, 0, rnd.Next(-180, 180) * spray);
+                finalDir = rot * finalDir;
+            }
+
+            if (rawSpell.SplitProjectile == true)
+            {
+                float angleOffset = GetAngle();
+                Quaternion rotation1 = Quaternion.Euler(0, 0, angleOffset);
+                Quaternion rotation2 = Quaternion.Euler(0, 0, -angleOffset);
+
+                Vector3 dir1 = rotation1 * finalDir;
+                Vector3 dir2 = rotation2 * finalDir;
+
+                FireProjectile(where, dir1);
+                FireProjectile(where, dir2);
+            }
+            else
+                FireProjectile(where, finalDir);
         }
+
+    }
+
+    public void FireSecondaryProjectile(Vector3 where, Vector3 dir)
+    {
+        GameManager.Instance.projectileManager.CreateProjectile(
+            rawSpell.Icon, rawSpell.SecondaryProjectile?.Trajectory, where, dir, GetSecondaryProjectileSpeed(), OnSecondaryHit, GetSecondaryLifeTime());
     }
 
     public IEnumerator Cast(Vector3 where, Vector3 target, Hittable.Team team)
@@ -132,31 +185,47 @@ public class Spell
 
         Vector3 dir = (target - where).normalized;
 
-        if (rawSpell.SplitProjectile == true)
-        {
-            float angleOffset = GetAngle();
-            Quaternion rotation1 = Quaternion.Euler(0, 0, angleOffset);
-            Quaternion rotation2 = Quaternion.Euler(0, 0, -angleOffset);
+        FireBaseProjectiles(where, dir);
 
-            Vector3 dir1 = rotation1 * dir;
-            Vector3 dir2 = rotation2 * dir;
-
-            yield return FireProjectilesWithDouble(where, dir1);
-            yield return FireProjectilesWithDouble(where, dir2);
-        }
-        else
+        if (rawSpell.DoubleProjectile == true)
         {
-            yield return FireProjectilesWithDouble(where, dir);
+            yield return new WaitForSeconds(GetDelay());
+
+            FireBaseProjectiles(where, dir);
         }
 
         yield return null;
     }
 
-    public virtual void OnHit(Hittable other, Vector3 impact)
+    public void OnHit(Hittable other, Vector3 impact)
     {
         if (other.team != owner.team)
         {
-            other.Damage(new Damage(Mathf.RoundToInt(GetDamage()), Damage.TypeFromString(rawSpell.BaseDamage?.Type)));
+            other.Damage(new Damage(Mathf.RoundToInt(GetBaseDamage()), Damage.TypeFromString(rawSpell.BaseDamage?.Type)));
+
+            if (rawSpell.SecondaryProjectile != null)
+            {
+                var rnd = new System.Random();
+
+                int count = rnd.Next(5, 10);
+                Vector3 dir = (other.owner.transform.position - impact).normalized;
+
+                for (int i = 0; i < count; i++)
+                {
+                    Quaternion rot = Quaternion.Euler(0, 0, rnd.Next(-180, 180));
+                    Vector3 randomDir = rot * dir;
+
+                    FireSecondaryProjectile(impact, randomDir);
+                }
+            }
+        }
+    }
+
+    public void OnSecondaryHit(Hittable other, Vector3 impact)
+    {
+        if (other.team != owner.team)
+        {
+            other.Damage(new Damage(Mathf.RoundToInt(GetSecondaryDamage()), Damage.TypeFromString(rawSpell.BaseDamage?.Type)));
         }
     }
 }
